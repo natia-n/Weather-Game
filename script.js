@@ -30,6 +30,14 @@ let activLink;
 let index1;
 let index2;
 
+classRemove();
+function classRemove(){
+    divCity1.classList.remove('shadowFolse');
+    divCity1.classList.remove('shadowTrue');
+    divCity2.classList.remove('shadowFolse');
+    divCity2.classList.remove('shadowTrue');
+}
+
 randomIndex();
 function randomIndex (){
     index1 = Math.floor(Math.random()*countryCapitals.length);
@@ -56,17 +64,16 @@ function cityPromise(){
         return resolve.json();
     }).then(date => {
         cityTemp1 = date.main.temp;
-        temperature1.textContent = cityTemp1 + ' -C';
+        temperature1.textContent =' -C';
     })
     
     city2Promise.then(resolve => {
         return resolve.json();
     }).then(date => {
         cityTemp2 = date.main.temp;
-        temperature2.textContent = cityTemp2 + ' -C';
+        temperature2.textContent =' -C';
     })
 }
-
 
 function link(city){
     link2 = 'https://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid=c8ad92304c65c233f74e2bc8f8fc3a53';
@@ -83,43 +90,65 @@ function textContent(){
 }
 
 divCity1.addEventListener('click', () => {
+    temperature1.textContent =cityTemp1 +' -C';
+    temperature2.textContent =cityTemp2 +' -C';
     addScore1();
-    randomIndex();
-    saveDate();
-    city1Promise = fetch(link(activCity1));
-    city2Promise = fetch(link(activCity2));
-    cityPromise();
-    textContent();
+    timer();
 });
 
 divCity2.addEventListener('click', () => {
+    temperature1.textContent =cityTemp1 +' -C';
+    temperature2.textContent =cityTemp2 +' -C';
     addScore2();
-    randomIndex();
-    saveDate();
-    city1Promise = fetch(link(activCity1));
-    city2Promise = fetch(link(activCity2));
-    cityPromise();
-    textContent();
+    timer();
 });
+
+function timer(){
+    setTimeout(() => {
+        gameFinish();
+        classRemove();  
+        randomIndex();
+        saveDate();
+        city1Promise = fetch(link(activCity1));
+        city2Promise = fetch(link(activCity2));
+        cityPromise();
+        textContent();
+    }, 500);
+}
 
 function addScore1(){
     if(cityTemp1 > cityTemp2){
-        score ++;
+        score ++;        
         spanScore.textContent = score;
+        divCity1.classList.add('shadowTrue'); 
     }
     if(cityTemp1 < cityTemp2){
         score --;
-        spanScore.textContent = score;    
+        spanScore.textContent = score; 
+        divCity1.classList.add('shadowFolse');   
     }
 }
 
 function addScore2(){
     if(cityTemp1 > cityTemp2){
         score --;
-        spanScore.textContent = score;       
+        spanScore.textContent = score; 
+        divCity2.classList.add('shadowFolse');       
     }
     if(cityTemp1 < cityTemp2){
         score ++;
-        spanScore.textContent = score;       
+        spanScore.textContent = score;  
+        divCity2.classList.add('shadowTrue');      
+    }
+}
+
+function gameFinish() {
+    if(score === 3){
+        score = 0;
+        alert('მოიგეთ :)');
+    }
+    if(score === -3){
+        score = 0;
+        alert('წააგეთ :(');
     }
 }
