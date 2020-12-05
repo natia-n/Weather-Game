@@ -5,6 +5,7 @@ body{
 .city{
     display: inline-block;
     width: 300px;
+    height: 150px;
     border: 2px solid;
     border-radius: 10px;
     border-color:#1735a5;

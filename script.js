@@ -34,6 +34,9 @@ randomIndex();
 function randomIndex (){
     index1 = Math.floor(Math.random()*countryCapitals.length);
     index2 = Math.floor(Math.random()*countryCapitals.length);
+    while(index1 === index2){
+        index2 = Math.floor(Math.random()*countryCapitals.length);
+    }    
 }
 
 saveDate();
@@ -47,33 +50,57 @@ function saveDate(){
 let city1Promise = fetch(link(activCity1));
 let city2Promise = fetch(link(activCity2));
 
-city1Promise.then(resolve => {
-    return resolve.json();
-}).then(date => {
-    cityTemp1 = date.main.temp;
-    temperature1.textContent = cityTemp1 + ' -C';
-})
+cityPromise();
+function cityPromise(){
+    city1Promise.then(resolve => {
+        return resolve.json();
+    }).then(date => {
+        cityTemp1 = date.main.temp;
+        temperature1.textContent = cityTemp1 + ' -C';
+    })
+    
+    city2Promise.then(resolve => {
+        return resolve.json();
+    }).then(date => {
+        cityTemp2 = date.main.temp;
+        temperature2.textContent = cityTemp2 + ' -C';
+    })
+}
 
-city2Promise.then(resolve => {
-    return resolve.json();
-}).then(date => {
-    cityTemp2 = date.main.temp;
-    temperature2.textContent = cityTemp2 + ' -C';
-})
 
 function link(city){
     link2 = 'https://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid=c8ad92304c65c233f74e2bc8f8fc3a53';
     return link2.replace('{city}',city); // replace ერთი სექსტი ჩაანაცვლოს მეორეთი
 }
 
-city1.textContent = activCity1;
-city2.textContent = activCity2;
-country1.textContent  = activCountry1;
-country2.textContent  = activCountry2;
-spanScore.textContent = score;
+textContent();
+function textContent(){
+    city1.textContent = activCity1;
+    city2.textContent = activCity2;
+    country1.textContent  = activCountry1;
+    country2.textContent  = activCountry2;
+    spanScore.textContent = score;
+}
 
-divCity1.addEventListener('click', addScore1);
-divCity2.addEventListener('click', addScore2);
+divCity1.addEventListener('click', () => {
+    addScore1();
+    randomIndex();
+    saveDate();
+    city1Promise = fetch(link(activCity1));
+    city2Promise = fetch(link(activCity2));
+    cityPromise();
+    textContent();
+});
+
+divCity2.addEventListener('click', () => {
+    addScore2();
+    randomIndex();
+    saveDate();
+    city1Promise = fetch(link(activCity1));
+    city2Promise = fetch(link(activCity2));
+    cityPromise();
+    textContent();
+});
 
 function addScore1(){
     if(cityTemp1 > cityTemp2){
@@ -82,7 +109,7 @@ function addScore1(){
     }
     if(cityTemp1 < cityTemp2){
         score --;
-        spanScore.textContent = score;       
+        spanScore.textContent = score;    
     }
 }
 
