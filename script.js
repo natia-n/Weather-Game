@@ -10,16 +10,15 @@
 // ხოლო ქალაქების და ქვეყნების სია შეგიძლიათ აიღოთ აქედან მასივის სახით:
 // https://raw.githubusercontent.com/vakhovakho/canvas/master/capitals.js
 
-let div1 = document.getElementById('city1');
-let div2 = document.getElementById('city2');
-let city1 = document.createElement('h2');
-let city2 = document.createElement('h2');
-let country1 = document.createElement('h3');
-let country2 = document.createElement('h3');
-let temperature1 = document.createElement('h4');
-let temperature2 = document.createElement('h4');
-let divScore = document.getElementById('score');
-let spanScore = document.createElement('span');
+let divCity1 = document.getElementById('div-city1');
+let divCity2 = document.getElementById('div-city2');
+let city1 = document.getElementById('city1');
+let city2 = document.getElementById('city2');
+let country1 = document.getElementById('country1');
+let country2 = document.getElementById('country2');
+let temperature1 = document.getElementById('temperature1');
+let temperature2 = document.getElementById('temperature2');
+let spanScore = document.getElementById('score');
 let score = 0;
 let activCity1 = null
 let activCity2 = null
@@ -52,31 +51,48 @@ city1Promise.then(resolve => {
     return resolve.json();
 }).then(date => {
     cityTemp1 = date.main.temp;
-    temperature1.textContent = cityTemp1 + ' -c';
+    temperature1.textContent = cityTemp1 + ' -C';
 })
 
 city2Promise.then(resolve => {
     return resolve.json();
 }).then(date => {
     cityTemp2 = date.main.temp;
-    temperature2.textContent = cityTemp2 + ' -c';
+    temperature2.textContent = cityTemp2 + ' -C';
 })
 
-function link(sity){
+function link(city){
     link2 = 'https://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid=c8ad92304c65c233f74e2bc8f8fc3a53';
-    return link2.replace('{city}',sity); 
+    return link2.replace('{city}',city); // replace ერთი სექსტი ჩაანაცვლოს მეორეთი
 }
-
-div1.appendChild(city1);
-div1.appendChild(country1);
-div1.appendChild(temperature1);
-div2.appendChild(city2);
-div2.appendChild(country2);
-div2.appendChild(temperature2);
-divScore.appendChild(spanScore);
 
 city1.textContent = activCity1;
 city2.textContent = activCity2;
 country1.textContent  = activCountry1;
 country2.textContent  = activCountry2;
 spanScore.textContent = score;
+
+divCity1.addEventListener('click', addScore1);
+divCity2.addEventListener('click', addScore2);
+
+function addScore1(){
+    if(cityTemp1 > cityTemp2){
+        score ++;
+        spanScore.textContent = score;
+    }
+    if(cityTemp1 < cityTemp2){
+        score --;
+        spanScore.textContent = score;       
+    }
+}
+
+function addScore2(){
+    if(cityTemp1 > cityTemp2){
+        score --;
+        spanScore.textContent = score;       
+    }
+    if(cityTemp1 < cityTemp2){
+        score ++;
+        spanScore.textContent = score;       
+    }
+}
