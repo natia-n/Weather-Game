@@ -44,14 +44,14 @@ divCity1.addEventListener('click', () => {
     temperature1.textContent =cityTemp1 +' -C';
     temperature2.textContent =cityTemp2 +' -C';
     addScore1();
-    timer();
+    timerNawDate();
 });
 
 divCity2.addEventListener('click', () => {
     temperature1.textContent =cityTemp1 +' -C';
     temperature2.textContent =cityTemp2 +' -C';
     addScore2();
-    timer();
+    timerNawDate();
 });
 
 // function
@@ -77,7 +77,7 @@ function saveDate(){
     activCountry2 = countryCapitals[index2].country;
 }
 
-function timer(){
+function timerNawDate(){
     setTimeout(() => {
         gameFinish();
         classRemove();  
