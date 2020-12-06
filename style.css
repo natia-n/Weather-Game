@@ -1,5 +1,10 @@
+*{
+    user-select: none;
+}
+
 body{
     text-align: center;
+    background-color: #aec5f9;
 }
 
 .city{
@@ -14,19 +19,17 @@ body{
     cursor: pointer;
 }
 
-h2{
+.city h2{
     color: #1735a5;
 }
 
-h4{
-    margin: 20px;    
+.city h3{
+    color: #1735a5; 
 }
 
-span{
-    font-size: 25px;
-    display: block;
-    margin: 11px;
-    font-weight: bold;
+.city h4{
+    margin: 20px;   
+    color: #1735a5; 
 }
 
 .score {
@@ -37,6 +40,14 @@ span{
     border-radius: 10px;
     border-color: #1735a5;
     box-shadow: inset 1px 1px 20px 0px #1735a5;
+}
+
+.score span{
+    font-size: 25px;
+    display: block;
+    margin: 11px;
+    font-weight: bold;
+    color: #1735a5;
 }
 
 .shadowFolse{

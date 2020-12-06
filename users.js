@@ -492,4 +492,3 @@ const countryCapitals = [
         city:"Harare"
     }
 ];
-

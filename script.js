@@ -1,5 +1,5 @@
 // გევალებათ რომ ააწყოთ თამაში, როგორც ვიდეოშია.
-// fetch-ის საშუალებით წამოიღოთ სერვერიდან ორი სხვადასხვა ქალაქის ახლანდელი ამინდი და 
+// fetch-ის საშუალებით წამოიღოთ სერვერიდან ორი სხვადასხვა ქალაქის ახლანდელი ამინდი 
 // მომხარებელმა უნდა გამოიცნოს რომელ ქალაქში უფრო ცხელა ახლაა. 
 // დაკლიკების შემდეგ აჩვენეთ სწორი პასუხი და შესაბამისი ტემპერატურები.
 // თუ გამოიცნობს მოუმატეთ ქულა, თუ ვერ გამოიცნობს დააკელით. 
@@ -10,15 +10,18 @@
 // ხოლო ქალაქების და ქვეყნების სია შეგიძლიათ აიღოთ აქედან მასივის სახით:
 // https://raw.githubusercontent.com/vakhovakho/canvas/master/capitals.js
 
-let divCity1 = document.getElementById('div-city1');
-let divCity2 = document.getElementById('div-city2');
-let city1 = document.getElementById('city1');
-let city2 = document.getElementById('city2');
-let country1 = document.getElementById('country1');
-let country2 = document.getElementById('country2');
-let temperature1 = document.getElementById('temperature1');
-let temperature2 = document.getElementById('temperature2');
-let spanScore = document.getElementById('score');
+const changeTime = 500;
+const winningPoints = 5;
+const lossPoints = -5;
+const divCity1 = document.getElementById('div-city1');
+const divCity2 = document.getElementById('div-city2');
+const city1 = document.getElementById('city1');
+const city2 = document.getElementById('city2');
+const country1 = document.getElementById('country1');
+const country2 = document.getElementById('country2');
+const temperature1 = document.getElementById('temperature1');
+const temperature2 = document.getElementById('temperature2');
+const spanScore = document.getElementById('score');
 let score = 0;
 let activCity1 = null
 let activCity2 = null
@@ -26,11 +29,32 @@ let activCountry1 = null
 let activCountry2 = null
 let cityTemp1 = null;
 let cityTemp2 = null;
-let activLink;
-let index1;
-let index2;
+let index1 = null;
+let index2 = null;
 
 classRemove();
+randomIndex();
+saveDate();
+let city1Promise = fetch(link(activCity1));
+let city2Promise = fetch(link(activCity2));
+cityPromise();
+textContentAdd();
+
+divCity1.addEventListener('click', () => {
+    temperature1.textContent =cityTemp1 +' -C';
+    temperature2.textContent =cityTemp2 +' -C';
+    addScore1();
+    timer();
+});
+
+divCity2.addEventListener('click', () => {
+    temperature1.textContent =cityTemp1 +' -C';
+    temperature2.textContent =cityTemp2 +' -C';
+    addScore2();
+    timer();
+});
+
+// function
 function classRemove(){
     divCity1.classList.remove('shadowFolse');
     divCity1.classList.remove('shadowTrue');
@@ -38,7 +62,6 @@ function classRemove(){
     divCity2.classList.remove('shadowTrue');
 }
 
-randomIndex();
 function randomIndex (){
     index1 = Math.floor(Math.random()*countryCapitals.length);
     index2 = Math.floor(Math.random()*countryCapitals.length);
@@ -47,7 +70,6 @@ function randomIndex (){
     }    
 }
 
-saveDate();
 function saveDate(){
     activCity1 = countryCapitals[index1].city;
     activCountry1 = countryCapitals[index1].country;
@@ -55,10 +77,19 @@ function saveDate(){
     activCountry2 = countryCapitals[index2].country;
 }
 
-let city1Promise = fetch(link(activCity1));
-let city2Promise = fetch(link(activCity2));
+function timer(){
+    setTimeout(() => {
+        gameFinish();
+        classRemove();  
+        randomIndex();
+        saveDate();
+        city1Promise = fetch(link(activCity1));
+        city2Promise = fetch(link(activCity2));
+        cityPromise();
+        textContentAdd();
+    }, changeTime);
+}
 
-cityPromise();
 function cityPromise(){
     city1Promise.then(resolve => {
         return resolve.json();
@@ -80,40 +111,12 @@ function link(city){
     return link2.replace('{city}',city); // replace ერთი სექსტი ჩაანაცვლოს მეორეთი
 }
 
-textContent();
-function textContent(){
+function textContentAdd (){
     city1.textContent = activCity1;
     city2.textContent = activCity2;
     country1.textContent  = activCountry1;
     country2.textContent  = activCountry2;
     spanScore.textContent = score;
-}
-
-divCity1.addEventListener('click', () => {
-    temperature1.textContent =cityTemp1 +' -C';
-    temperature2.textContent =cityTemp2 +' -C';
-    addScore1();
-    timer();
-});
-
-divCity2.addEventListener('click', () => {
-    temperature1.textContent =cityTemp1 +' -C';
-    temperature2.textContent =cityTemp2 +' -C';
-    addScore2();
-    timer();
-});
-
-function timer(){
-    setTimeout(() => {
-        gameFinish();
-        classRemove();  
-        randomIndex();
-        saveDate();
-        city1Promise = fetch(link(activCity1));
-        city2Promise = fetch(link(activCity2));
-        cityPromise();
-        textContent();
-    }, 500);
 }
 
 function addScore1(){
@@ -143,11 +146,11 @@ function addScore2(){
 }
 
 function gameFinish() {
-    if(score === 3){
+    if(score === winningPoints){
         score = 0;
         alert('მოიგეთ :)');
     }
-    if(score === -3){
+    if(score === lossPoints){
         score = 0;
         alert('წააგეთ :(');
     }
